@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我替你选择</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">幸运转盘</h1>
+        
+        <div class="main-content">
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <canvas id="wheelCanvas"></canvas>
+                    <div class="pointer"></div>
+                </div>
+                <button id="startBtn" class="start-btn">开始</button>
+            </div>
+            
+            <div class="items-section">
+                <h2>自定义项目</h2>
+                <div class="input-group">
+                    <input type="text" id="itemInput" placeholder="输入项目内容" maxlength="20">
+                    <button id="addItemBtn" class="add-btn">添加</button>
+                </div>
+                <div class="items-list" id="itemsList"></div>
+                <button id="clearAllBtn" class="clear-btn">清空所有</button>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <button id="configBtn" class="config-btn">⚙️ 配置</button>
+            <button id="historyBtn" class="config-btn">📜 历史</button>
+        </div>
+    </div>
+
+    <!-- 配置弹窗 -->
+    <div id="configModal" class="modal">
+        <div class="modal-content config-modal">
+            <span class="close" id="closeConfigModal">&times;</span>
+            <h2>⚙️ 使用限制设置</h2>
+            <div class="setting-item">
+                <label class="setting-label">
+                    <input type="checkbox" id="limitToggle">
+                    <span>开启每日使用限制</span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label class="setting-label">
+                    <span>每日可用次数：</span>
+                    <input type="number" id="dailyLimit" class="limit-input" min="1" max="100" value="5">
+                </label>
+            </div>
+            <div class="usage-info">
+                <p>今日已使用：<span id="usedCount">0</span> 次</p>
+                <p>剩余次数：<span id="remainingCount">5</span> 次</p>
+            </div>
+            <button class="modal-btn" onclick="closeConfigModal()">确定</button>
+        </div>
+    </div>
+
+    <!-- 转盘悬停提示 -->
+    <div id="wheelTooltip" class="wheel-tooltip"></div>
+
+    <!-- 历史记录弹窗 -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content history-modal">
+            <span class="close" id="closeHistoryModal">&times;</span>
+            <h2>📜 历史记录</h2>
+            <div class="history-actions">
+                <button id="clearHistoryBtn" class="clear-history-btn">清空历史</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <p class="empty-history">暂无历史记录</p>
+            </div>
+            <button class="modal-btn" onclick="closeHistoryModal()">关闭</button>
+        </div>
+    </div>
+
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>🎉 结果</h2>
+            <p id="resultText"></p>
+            <button class="modal-btn" onclick="closeModal()">确定</button>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
