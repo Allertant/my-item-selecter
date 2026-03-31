@@ -50,7 +50,10 @@ my-item-selecter/
 
 ### `src/index.html`
 
+- 深色顶部导航栏（`<header class="site-header">`），含 SVG 图标和标题
 - 包含转盘区域（`<canvas id="wheelCanvas">`）、项目列表、配置弹窗、历史记录弹窗
+- 底部页脚（`<footer class="site-footer">`）
+- 配置/历史按钮使用内联 SVG 图标（非 emoji）
 - 引用同级目录下的 `styles.css` 和 `script.js`
 
 ### `src/script.js`
@@ -81,7 +84,7 @@ my-item-selecter/
 
 #### 颜色方案
 
-`colors` 数组定义了 16 种鲜艳颜色，通过 `index % colors.length` 循环使用。
+`colors` 数组定义了 16 种黑灰色调颜色（GitHub 风格），通过 `index % colors.length` 循环使用。
 
 #### 转盘旋转算法
 
@@ -92,10 +95,15 @@ my-item-selecter/
 
 ### `src/styles.css`
 
-- 渐变紫色背景（`#667eea` → `#764ba2`）
-- 白色圆角容器（`.container`）
+- 纯黑白 GitHub 风格主题，使用 CSS 变量统一管理配色
+- 深色顶部导航栏（`#24292f`），浅灰背景（`#f6f8fa`）
+- **所有按钮均为黑白灰色调**：主按钮深色背景（`#1f2328`），次要按钮浅灰（`#f6f8fa`）
+- 无彩色元素：无紫色、无红色、无渐变，纯黑白色系
+- 所有图标使用内联 SVG（GitHub Octicons 风格），不使用 emoji
 - 响应式设计：移动端 `max-width: 600px` 时转盘缩小至 280px
 - 弹窗使用固定定位 + `display: block/none` 切换
+- 所有按钮/输入框使用 `6px` 圆角，与 GitHub 设计语言一致
+- `body` 使用 `flex` 布局 + `margin-top: auto` 确保 footer 始终在底部
 
 ### `run/Dockerfile`
 

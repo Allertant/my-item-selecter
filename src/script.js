@@ -1,9 +1,9 @@
-// 颜色数组 - 使用鲜艳且和谐的颜色
+// 颜色数组 - GitHub 风格黑白灰配色
 const colors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A',
-    '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2',
-    '#F8B739', '#52B788', '#FF8FAB', '#95E1D3',
-    '#F38181', '#AA96DA', '#FCBAD3', '#A8D8EA'
+    '#24292f', '#57606a', '#8b949e', '#6e7781',
+    '#3a3f47', '#4a5058', '#6a737d', '#545d68',
+    '#2c313a', '#7a828e', '#3d4450', '#8e959f',
+    '#484f58', '#5c6370', '#9199a2', '#3b424c'
 ];
 
 // 存储项目
@@ -329,14 +329,14 @@ function drawWheel(rotation = 0) {
         // 绘制空白转盘
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#f0f0f0';
+        ctx.fillStyle = '#f6f8fa';
         ctx.fill();
-        ctx.strokeStyle = '#ddd';
+        ctx.strokeStyle = '#d0d7de';
         ctx.lineWidth = 2;
         ctx.stroke();
         
-        ctx.fillStyle = '#999';
-        ctx.font = '18px Arial';
+        ctx.fillStyle = '#656d76';
+        ctx.font = '16px Arial';
         ctx.textAlign = 'center';
         ctx.fillText('请添加项目', centerX, centerY);
         return;
@@ -359,7 +359,7 @@ function drawWheel(rotation = 0) {
         ctx.fill();
         
         // 绘制边框
-        ctx.strokeStyle = 'white';
+        ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.stroke();
         
@@ -374,13 +374,13 @@ function drawWheel(rotation = 0) {
         ctx.textBaseline = 'middle';
         
         // 增强文字阴影，提升清晰度
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 1;
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 1;
         
-        ctx.fillStyle = 'white';
-        ctx.font = '900 18px Arial';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '600 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
         
         // 文字截断
         let text = item;
@@ -395,14 +395,14 @@ function drawWheel(rotation = 0) {
     // 绘制中心圆
     ctx.beginPath();
     ctx.arc(centerX, centerY, 30, 0, Math.PI * 2);
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#ffffff';
     ctx.fill();
-    ctx.strokeStyle = '#ddd';
+    ctx.strokeStyle = '#d0d7de';
     ctx.lineWidth = 2;
     ctx.stroke();
     
-    ctx.fillStyle = '#667eea';
-    ctx.font = 'bold 12px Arial';
+    ctx.fillStyle = '#24292f';
+    ctx.font = 'bold 14px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('GO', centerX, centerY);
