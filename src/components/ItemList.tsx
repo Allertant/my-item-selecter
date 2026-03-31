@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2, Settings, History } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 
 interface ItemListProps {
   items: string[];
   onAdd: (name: string) => void;
   onDelete: (index: number) => void;
   onClear: () => void;
-  onOpenConfig: () => void;
-  onOpenHistory: () => void;
   disabled: boolean;
   remaining: number;
   limitEnabled: boolean;
@@ -20,8 +18,6 @@ export default function ItemList({
   onAdd,
   onDelete,
   onClear,
-  onOpenConfig,
-  onOpenHistory,
   disabled,
   remaining,
   limitEnabled,
@@ -44,7 +40,7 @@ export default function ItemList({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3 h-full">
       <h2 className="text-sm font-semibold text-fg-muted">自定义项目</h2>
 
       {/* 输入区域 */}
@@ -72,9 +68,9 @@ export default function ItemList({
       )}
 
       {/* 项目列表 */}
-      <div className="border border-border rounded-md bg-canvas overflow-hidden">
+      <div className="border border-border rounded-md bg-canvas overflow-y-auto flex-1 min-h-[120px]">
         {items.length === 0 ? (
-          <p className="p-4 text-sm text-fg-subtle text-center">暂无项目，请添加项目</p>
+          <p className="p-6 text-sm text-fg-subtle text-center">暂无项目，请添加</p>
         ) : (
           <ul className="divide-y divide-border">
             {items.map((item, index) => (
@@ -96,7 +92,7 @@ export default function ItemList({
       </div>
 
       {/* 操作按钮 */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <Button
           variant="outline"
           size="sm"
@@ -106,17 +102,6 @@ export default function ItemList({
           <Trash2 className="h-3.5 w-3.5" />
           清空所有
         </Button>
-
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" onClick={onOpenConfig}>
-            <Settings className="h-3.5 w-3.5" />
-            配置
-          </Button>
-          <Button variant="ghost" size="sm" onClick={onOpenHistory}>
-            <History className="h-3.5 w-3.5" />
-            历史
-          </Button>
-        </div>
       </div>
     </div>
   );
