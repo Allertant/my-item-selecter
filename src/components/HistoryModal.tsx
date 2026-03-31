@@ -38,7 +38,7 @@ export default function HistoryModal({
             history.map((item, index) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between px-3 py-2 border border-border rounded-md bg-canvas-subtle"
+                className="flex items-center justify-between px-3 py-2.5 border border-border rounded-md bg-canvas-subtle"
               >
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm font-medium">{item.name}</span>

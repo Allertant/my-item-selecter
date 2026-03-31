@@ -56,7 +56,7 @@ export default function ItemList({
         />
         <Button onClick={handleAdd} disabled={disabled || items.length >= 16} size="sm">
           <Plus className="h-4 w-4" />
-          添加
+          <span className="hidden sm:inline">添加</span>
         </Button>
       </div>
 
@@ -68,13 +68,13 @@ export default function ItemList({
       )}
 
       {/* 项目列表 */}
-      <div className="border border-border rounded-md bg-canvas overflow-y-auto flex-1 min-h-[120px]">
+      <div className="border border-border rounded-md bg-canvas overflow-y-auto flex-1 min-h-[140px]">
         {items.length === 0 ? (
           <p className="p-6 text-sm text-fg-subtle text-center">暂无项目，请添加</p>
         ) : (
           <ul className="divide-y divide-border">
             {items.map((item, index) => (
-              <li key={`${item}-${index}`} className="flex items-center justify-between px-3 py-2 group">
+              <li key={`${item}-${index}`} className="flex items-center justify-between px-3 py-2.5 group">
                 <span className="text-sm truncate">{item}</span>
                 <Button
                   variant="ghost"

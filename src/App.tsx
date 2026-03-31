@@ -102,10 +102,10 @@ function App() {
         onOpenHistory={() => setHistoryOpen(true)}
       />
 
-      <main className="flex-1 px-4 py-6 md:px-8 md:py-10">
+      <main className="flex-1 px-4 py-6 md:px-6 lg:py-10 xl:py-14">
         <div className="mx-auto max-w-5xl">
           {/* PC 端左右双栏：转盘 + 列表；移动端上下堆叠 */}
-          <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 lg:justify-center">
+          <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
             {/* 左侧：转盘区域 */}
             <div className="flex flex-col items-center lg:flex-shrink-0">
               <Wheel
@@ -117,14 +117,14 @@ function App() {
                 onClick={handleStartSpin}
                 disabled={isSpinning || items.length === 0}
                 size="lg"
-                className="mt-5 px-10"
+                className="mt-6"
               >
                 {isSpinning ? '旋转中...' : '开始旋转'}
               </Button>
             </div>
 
             {/* 右侧：项目列表区域 */}
-            <div className="mt-6 lg:mt-0 w-full max-w-md mx-auto lg:mx-0 lg:flex-1 lg:max-w-sm">
+            <div className="mt-8 lg:mt-0 w-full max-w-md mx-auto lg:mx-0 lg:flex-1 lg:max-w-sm xl:max-w-md">
               <ItemList
                 items={items}
                 onAdd={handleAddItem}
