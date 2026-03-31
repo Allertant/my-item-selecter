@@ -34,10 +34,10 @@ my-item-selecter/
 │   ├── index.html       # 主页面（含所有弹窗 DOM 结构）
 │   ├── styles.css       # 全局样式
 │   └── script.js        # 全部业务逻辑（单文件）
-├── Dockerfile           # Docker 构建（基于 nginx:latest）
 ├── docs/
 │   └── copilot-instructions.md  # 本文档
 └── run/
+    ├── Dockerfile       # Docker 构建（基于 nginx:latest）
     ├── deploy.sh        # Docker 一键部署脚本
     └── README.md        # 部署说明文档
 ```
@@ -97,10 +97,10 @@ my-item-selecter/
 - 响应式设计：移动端 `max-width: 600px` 时转盘缩小至 280px
 - 弹窗使用固定定位 + `display: block/none` 切换
 
-### `Dockerfile`
+### `run/Dockerfile`
 
 - 基于 `nginx:latest`
-- 复制 `index.html`、`css/`、`js/` 到 `/usr/share/nginx/html/`
+- 复制 `src/` 下的静态文件到 `/usr/share/nginx/html/`
 - 暴露 80 端口
 
 ### `run/deploy.sh`
@@ -108,7 +108,7 @@ my-item-selecter/
 一键 Docker 部署脚本：
 
 1. 停止并删除旧容器 `lucky-wheel`
-2. 构建新镜像 `my-lucky-wheel:latest`
+2. 使用 `run/Dockerfile` 构建新镜像 `my-lucky-wheel:latest`（以项目根目录为构建上下文）
 3. 启动新容器，映射 `8080:80`
 
 ---
