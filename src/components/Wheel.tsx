@@ -1,5 +1,4 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { TriangleAlert } from 'lucide-react';
 import { createDrawContext, clearCanvas, drawEmptyWheel, drawSlices, drawCenter } from '@/lib/wheel-drawing';
 import { WheelTooltip } from '@/components/WheelTooltip';
 
@@ -121,7 +120,7 @@ export default function Wheel({ items, isSpinning, currentRotation }: WheelProps
         className="relative w-[340px] sm:w-[380px] lg:w-[460px] max-w-full aspect-square flex items-center justify-center"
       >
         <div className="absolute top-1 left-1/2 -translate-x-1/2 z-10">
-          <TriangleAlert className="h-6 w-6 rotate-180 text-fg fill-canvas drop-shadow-sm" />
+          <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[16px] border-l-transparent border-r-transparent border-t-fg drop-shadow-sm" />
         </div>
         <canvas
           ref={canvasRef}
