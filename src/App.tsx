@@ -31,6 +31,7 @@ function App() {
       />
       <main className="flex-1 px-4 py-6 md:px-6 lg:py-10 xl:py-14">
         <div className="mx-auto max-w-5xl">
+          {/* 移动端：转盘+结果在上，列表在下。PC 端：左右双栏 */}
           <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
             <div className="flex flex-col items-center lg:flex-shrink-0">
               <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} />
@@ -50,13 +51,22 @@ function App() {
                 )}
               </div>
             </div>
-            <div className="mt-8 lg:mt-0 w-full max-w-md mx-auto lg:mx-0 lg:flex-1 xl:max-w-md">
+            {/* PC 端：右侧面板 */}
+            <div className="hidden lg:block w-full max-w-md lg:flex-1 xl:max-w-md">
               <ItemList
                 items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
                 onClear={handleClearItems} disabled={isSpinning}
                 remaining={remaining} limitEnabled={limitEnabled}
               />
             </div>
+          </div>
+          {/* 移动端：列表放在最下方 */}
+          <div className="mt-8 w-full max-w-md mx-auto lg:hidden">
+            <ItemList
+              items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
+              onClear={handleClearItems} disabled={isSpinning}
+              remaining={remaining} limitEnabled={limitEnabled}
+            />
           </div>
         </div>
       </main>
