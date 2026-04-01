@@ -1,9 +1,3 @@
-/** 转盘项目 */
-export interface WheelItem {
-  id: string;
-  name: string;
-}
-
 /** 历史记录项 */
 export interface HistoryItem {
   id: string;
