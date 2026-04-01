@@ -3,6 +3,7 @@ FROM docker.io/library/node:20-alpine AS build
 
 WORKDIR /app
 
+
 # 先复制依赖文件，利用 Docker 缓存层
 COPY package.json package-lock.json ./
 
