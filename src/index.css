@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* ===== 白天模式（默认） ===== */
 @theme {
   --color-header: #24292f;
   --color-canvas: #ffffff;
@@ -17,6 +18,25 @@
   --color-btn-danger-hover: #e73746;
   --color-ring: #1f2328;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", Helvetica, Arial, sans-serif;
+}
+
+/* ===== 夜晚模式 ===== */
+.dark {
+  --color-header: #1c2128;
+  --color-canvas: #161b22;
+  --color-canvas-subtle: #0d1117;
+  --color-border: #30363d;
+  --color-border-muted: #21262d;
+  --color-fg: #e6edf3;
+  --color-fg-muted: #8b949e;
+  --color-fg-subtle: #6e7681;
+  --color-btn-bg: #21262d;
+  --color-btn-hover: #30363d;
+  --color-btn-primary: #e6edf3;
+  --color-btn-primary-hover: #f0f3f6;
+  --color-btn-danger: #f85149;
+  --color-btn-danger-hover: #ff7b72;
+  --color-ring: #58a6ff;
 }
 
 @layer base {

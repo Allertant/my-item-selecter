@@ -8,6 +8,7 @@ import ConfigModal from '@/components/ConfigModal';
 import HistoryModal from '@/components/HistoryModal';
 import ResultModal from '@/components/ResultModal';
 import { useAppLogic } from '@/hooks/useAppLogic';
+import { useTheme } from '@/hooks/useTheme';
 
 function App() {
   const {
@@ -17,18 +18,22 @@ function App() {
     handleAddItem, handleDeleteItem, handleClearItems,
     handleClearHistory, handleSaveConfig, limitSettings, limitEnabled,
   } = useAppLogic();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
     <TooltipProvider>
       <Header
         onOpenConfig={() => setConfigOpen(true)}
         onOpenHistory={() => setHistoryOpen(true)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
       <main className="flex-1 px-4 py-6 md:px-6 lg:py-10 xl:py-14">
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
             <div className="flex flex-col items-center lg:flex-shrink-0">
-              <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} />
+              <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} />
               <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg" className="mt-6">
                 开始旋转
               </Button>

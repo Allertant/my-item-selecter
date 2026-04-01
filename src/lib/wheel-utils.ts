@@ -1,10 +1,26 @@
-/** GitHub 风格黑白灰配色 */
-export const WHEEL_COLORS = [
+/** GitHub 风格黑白灰配色（白天模式） */
+export const WHEEL_COLORS_LIGHT = [
   '#24292f', '#57606a', '#8b949e', '#6e7781',
   '#3a3f47', '#4a5058', '#6a737d', '#545d68',
   '#2c313a', '#7a828e', '#3d4450', '#8e959f',
   '#484f58', '#5c6370', '#9199a2', '#3b424c',
 ] as const;
+
+/** 深色系配色（夜晚模式） */
+export const WHEEL_COLORS_DARK = [
+  '#3d4450', '#484f58', '#5c6370', '#6e7681',
+  '#3a414a', '#4a515a', '#565d67', '#636b75',
+  '#3f4652', '#525a64', '#4b5260', '#6a7078',
+  '#434a54', '#585f69', '#606870', '#3b424c',
+] as const;
+
+/** 根据主题获取配色 */
+export function getWheelColors(isDark: boolean) {
+  return isDark ? WHEEL_COLORS_DARK : WHEEL_COLORS_LIGHT;
+}
+
+/** 白天模式 */
+export const WHEEL_COLORS = WHEEL_COLORS_LIGHT;
 
 /** 缓动函数：easeOutCubic */
 export function easeOutCubic(t: number): number {

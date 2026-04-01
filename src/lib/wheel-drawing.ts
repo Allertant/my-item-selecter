@@ -1,4 +1,4 @@
-import { WHEEL_COLORS } from './wheel-utils';
+import { getWheelColors } from './wheel-utils';
 
 /** 转盘绘制相关常量 */
 const DRAW = {
@@ -27,6 +27,42 @@ const DRAW = {
   /** 字体栈（无中文） */
   FONT_STACK_EN: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 } as const;
+
+/** 白天模式绘制颜色 */
+const COLORS_LIGHT = {
+  emptyFill: '#ffffff',
+  emptyBorder: '#d0d7de',
+  emptyInnerCircle: '#e8ecf0',
+  plusIcon: '#656d76',
+  emptyText: '#8b949e',
+  sliceText: '#ffffff',
+  sliceSeparator: 'rgba(255, 255, 255, 0.8)',
+  sliceTextShadow: 'rgba(0, 0, 0, 0.4)',
+  centerFill: '#ffffff',
+  centerBorder: '#d0d7de',
+  centerText: '#1f2328',
+  centerTextShadow: 'none',
+} as const;
+
+/** 夜晚模式绘制颜色 */
+const COLORS_DARK = {
+  emptyFill: '#0d1117',
+  emptyBorder: '#30363d',
+  emptyInnerCircle: '#21262d',
+  plusIcon: '#8b949e',
+  emptyText: '#6e7681',
+  sliceText: '#e6edf3',
+  sliceSeparator: 'rgba(48, 54, 61, 0.8)',
+  sliceTextShadow: 'rgba(0, 0, 0, 0.6)',
+  centerFill: '#e6edf3',
+  centerBorder: '#30363d',
+  centerText: '#1f2328',
+  centerTextShadow: 'none',
+} as const;
+
+function getDrawColors(isDark: boolean) {
+  return isDark ? COLORS_DARK : COLORS_LIGHT;
+}
 
 /** 绘制上下文信息 */
 interface DrawContext {
@@ -59,24 +95,25 @@ export function clearCanvas(dc: DrawContext) {
 }
 
 /** 绘制空白转盘 */
-export function drawEmptyWheel(dc: DrawContext) {
+export function drawEmptyWheel(dc: DrawContext, isDark: boolean) {
   const { ctx, centerX, centerY, radius } = dc;
+  const c = getDrawColors(isDark);
 
-  // 白色圆 + 阴影
+  // 圆 + 阴影
   ctx.save();
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.06)';
+  ctx.shadowColor = isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.06)';
   ctx.shadowBlur = 20;
   ctx.shadowOffsetY = 4;
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = c.emptyFill;
   ctx.fill();
   ctx.restore();
 
   // 粗虚线边框
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-  ctx.strokeStyle = '#d0d7de';
+  ctx.strokeStyle = c.emptyBorder;
   ctx.lineWidth = 2;
   ctx.setLineDash([10, 6]);
   ctx.stroke();
@@ -85,7 +122,7 @@ export function drawEmptyWheel(dc: DrawContext) {
   // 内圈装饰虚线
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius * 0.65, 0, Math.PI * 2);
-  ctx.strokeStyle = '#e8ecf0';
+  ctx.strokeStyle = c.emptyInnerCircle;
   ctx.lineWidth = 1.5;
   ctx.setLineDash([6, 4]);
   ctx.stroke();
@@ -93,7 +130,7 @@ export function drawEmptyWheel(dc: DrawContext) {
 
   // "+" 图标
   const plusY = centerY - 10;
-  ctx.strokeStyle = '#656d76';
+  ctx.strokeStyle = c.plusIcon;
   ctx.lineWidth = 2;
   ctx.lineCap = 'round';
   ctx.beginPath();
@@ -106,7 +143,7 @@ export function drawEmptyWheel(dc: DrawContext) {
   ctx.stroke();
 
   // 提示文字
-  ctx.fillStyle = '#8b949e';
+  ctx.fillStyle = c.emptyText;
   ctx.font = `500 ${DRAW.EMPTY_FONT_SIZE}px ${DRAW.FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -114,10 +151,12 @@ export function drawEmptyWheel(dc: DrawContext) {
 }
 
 /** 绘制扇形 */
-export function drawSlices(dc: DrawContext, items: string[], currentRotation: number) {
+export function drawSlices(dc: DrawContext, items: string[], currentRotation: number, isDark: boolean) {
   const { ctx, centerX, centerY, radius, size } = dc;
+  const c = getDrawColors(isDark);
   const sliceAngle = (Math.PI * 2) / items.length;
   const fontSize = getSliceFontSize(size);
+  const colors = getWheelColors(isDark);
 
   items.forEach((item, index) => {
     const startAngle = index * sliceAngle + currentRotation;
@@ -128,9 +167,9 @@ export function drawSlices(dc: DrawContext, items: string[], currentRotation: nu
     ctx.moveTo(centerX, centerY);
     ctx.arc(centerX, centerY, radius, startAngle, endAngle);
     ctx.closePath();
-    ctx.fillStyle = WHEEL_COLORS[index % WHEEL_COLORS.length];
+    ctx.fillStyle = colors[index % colors.length];
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.strokeStyle = c.sliceSeparator;
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
@@ -143,9 +182,9 @@ export function drawSlices(dc: DrawContext, items: string[], currentRotation: nu
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+    ctx.shadowColor = c.sliceTextShadow;
     ctx.shadowBlur = 2;
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = c.sliceText;
     ctx.font = `600 ${fontSize}px ${DRAW.FONT_STACK}`;
 
     const text = item.length > DRAW.MAX_TEXT_LENGTH
@@ -157,18 +196,19 @@ export function drawSlices(dc: DrawContext, items: string[], currentRotation: nu
 }
 
 /** 绘制中心圆 */
-export function drawCenter(dc: DrawContext) {
+export function drawCenter(dc: DrawContext, isDark: boolean) {
   const { ctx, centerX, centerY } = dc;
+  const c = getDrawColors(isDark);
 
   ctx.beginPath();
   ctx.arc(centerX, centerY, DRAW.CENTER_RADIUS, 0, Math.PI * 2);
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = c.centerFill;
   ctx.fill();
-  ctx.strokeStyle = '#d0d7de';
+  ctx.strokeStyle = c.centerBorder;
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  ctx.fillStyle = '#1f2328';
+  ctx.fillStyle = c.centerText;
   ctx.font = `700 ${DRAW.CENTER_FONT_SIZE}px ${DRAW.FONT_STACK_EN}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
