@@ -2,7 +2,8 @@
 
 /* ===== 白天模式（默认） ===== */
 @theme {
-  --color-header: #24292f;
+  --color-header: #f6f8fa;
+  --color-header-border: #d0d7de;
   --color-canvas: #ffffff;
   --color-canvas-subtle: #f6f8fa;
   --color-border: #d0d7de;
@@ -23,6 +24,7 @@
 /* ===== 夜晚模式 ===== */
 .dark {
   --color-header: #1c2128;
+  --color-header-border: #30363d;
   --color-canvas: #161b22;
   --color-canvas-subtle: #0d1117;
   --color-border: #30363d;

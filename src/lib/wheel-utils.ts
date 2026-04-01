@@ -1,6 +1,6 @@
 /** GitHub 风格双色交替配色（白天模式） */
 export const WHEEL_COLORS_LIGHT = [
-  '#24292f', '#6e7781',
+  '#656d76', '#c9d1d9',
 ] as const;
 
 /** GitHub 风格双色交替配色（夜晚模式） */
