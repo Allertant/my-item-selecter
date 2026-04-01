@@ -36,13 +36,21 @@ export function useAppLogic() {
     const selected = items[resultIndex];
     setResultItem(selected);
 
+    let id: string;
+    try {
+      id = crypto.randomUUID();
+    } catch {
+      id = Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
+
     const now = new Date();
     const record: HistoryItem = {
-      id: crypto.randomUUID(),
+      id,
       name: selected,
       date: now.toLocaleDateString('zh-CN'),
       time: now.toLocaleTimeString('zh-CN'),
     };
+
     setHistory((prev) => [record, ...prev].slice(0, MAX_HISTORY));
   }, [items, incrementUsage, setHistory]);
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Plus, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
 
 interface ItemListProps {
@@ -23,7 +24,7 @@ export default function ItemList({
   limitEnabled,
 }: ItemListProps) {
   const [inputValue, setInputValue] = useState('');
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useLocalStorage('wheel-collapsed', true);
 
   const handleAdd = () => {
     const text = inputValue.trim();

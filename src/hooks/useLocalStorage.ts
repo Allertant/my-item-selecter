@@ -20,7 +20,6 @@ export function useLocalStorage<T>(key: string, defaultValue: T): [T, (value: T 
       try {
         localStorage.setItem(key, JSON.stringify(resolved));
       } catch {
-        // localStorage 满 or 不可用，静默处理
       }
       return resolved;
     });
