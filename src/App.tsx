@@ -6,15 +6,15 @@ import Wheel from '@/components/Wheel';
 import ItemList from '@/components/ItemList';
 import ConfigModal from '@/components/ConfigModal';
 import HistoryModal from '@/components/HistoryModal';
-import ResultModal from '@/components/ResultModal';
 import { useAppLogic } from '@/hooks/useAppLogic';
 import { useTheme } from '@/hooks/useTheme';
+import { PartyPopper } from 'lucide-react';
 
 function App() {
   const {
     items, history, remaining, isSpinning, currentRotation, startSpin,
     configOpen, setConfigOpen, historyOpen, setHistoryOpen,
-    resultOpen, setResultOpen, resultItem,
+    resultItem,
     handleAddItem, handleDeleteItem, handleClearItems,
     handleClearHistory, handleSaveConfig, limitSettings, limitEnabled,
   } = useAppLogic();
@@ -37,6 +37,18 @@ function App() {
               <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg" className="mt-6">
                 开始旋转
               </Button>
+              {/* 结果内联展示 - 预留固定高度避免布局移位 */}
+              <div className="mt-3 h-9 flex items-center justify-center">
+                {resultItem && (
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
+                    <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
+                    <span className="text-sm text-fg">
+                      选中了
+                      <span className="font-semibold mx-1">{resultItem}</span>
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="mt-8 lg:mt-0 w-full max-w-md mx-auto lg:mx-0 lg:flex-1 xl:max-w-md">
               <ItemList
@@ -51,7 +63,6 @@ function App() {
       <Footer />
       <ConfigModal open={configOpen} onOpenChange={setConfigOpen} settings={limitSettings} onSave={handleSaveConfig} usedCount={limitSettings.usedCount} remaining={remaining} />
       <HistoryModal open={historyOpen} onOpenChange={setHistoryOpen} history={history} onClear={handleClearHistory} />
-      <ResultModal open={resultOpen} onOpenChange={setResultOpen} result={resultItem} />
     </TooltipProvider>
   );
 }

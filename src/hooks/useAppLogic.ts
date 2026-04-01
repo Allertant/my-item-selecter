@@ -26,7 +26,7 @@ export function useAppLogic() {
   // === 弹窗状态 ===
   const [configOpen, setConfigOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const [resultOpen, setResultOpen] = useState(false);
+  // 旋转结果（内联展示，非弹窗）
   const [resultItem, setResultItem] = useState<string | null>(null);
 
   // === 旋转结果处理 ===
@@ -44,8 +44,6 @@ export function useAppLogic() {
       time: now.toLocaleTimeString('zh-CN'),
     };
     setHistory((prev) => [record, ...prev].slice(0, MAX_HISTORY));
-
-    setResultOpen(true);
   }, [items, incrementUsage, setHistory]);
 
   // === 转盘旋转 ===
@@ -59,6 +57,7 @@ export function useAppLogic() {
       alert('今日使用次数已用完！请明天再试。');
       return;
     }
+    setResultItem(null); // 清除上次结果
     startSpin();
   }, [canSpin, startSpin]);
 
@@ -109,8 +108,6 @@ export function useAppLogic() {
     setConfigOpen,
     historyOpen,
     setHistoryOpen,
-    resultOpen,
-    setResultOpen,
     resultItem,
     // 操作
     handleAddItem,
