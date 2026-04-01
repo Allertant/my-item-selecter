@@ -91,7 +91,16 @@ export default function Wheel({ items, isSpinning, currentRotation, isDark }: Wh
   }, [items, currentRotation, dimensions, isDark]);
 
   useEffect(() => {
-    const handleResize = () => setDimensions({ width: window.innerWidth, height: window.innerHeight });
+    const handleResize = () => {
+      const container = containerRef.current;
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      setDimensions(prev => {
+        if (Math.abs(prev.width - w) <= 1 && Math.abs(prev.height - h) <= 1) return prev;
+        return { width: w, height: h };
+      });
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);

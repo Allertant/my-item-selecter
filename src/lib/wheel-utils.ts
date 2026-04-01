@@ -5,7 +5,7 @@ export const WHEEL_COLORS_LIGHT = [
 
 /** GitHub 风格双色交替配色（夜晚模式） */
 export const WHEEL_COLORS_DARK = [
-  '#e6edf3', '#8b949e',
+  '#30363d', '#21262d',
 ] as const;
 
 /** 根据主题获取配色 */

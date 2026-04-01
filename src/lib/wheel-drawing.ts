@@ -4,8 +4,8 @@ import { getWheelColors } from './wheel-utils';
 const DRAW = {
   /** 扇形边距 */
   PADDING: 12,
-  /** 中心圆半径 */
-  CENTER_RADIUS: 32,
+  /** 中心圆半径（相对于 radius 的比例） */
+  CENTER_RADIUS_RATIO: 0.18,
   /** 中心圆文字 */
   CENTER_TEXT: 'GO',
   /** 中心圆字号 */
@@ -52,11 +52,11 @@ const COLORS_DARK = {
   plusIcon: '#8b949e',
   emptyText: '#6e7681',
   sliceText: '#e6edf3',
-  sliceSeparator: 'rgba(48, 54, 61, 0.8)',
+  sliceSeparator: 'rgba(22, 27, 34, 0.6)',
   sliceTextShadow: 'rgba(0, 0, 0, 0.6)',
-  centerFill: '#e6edf3',
-  centerBorder: '#30363d',
-  centerText: '#1f2328',
+  centerFill: '#30363d',
+  centerBorder: '#484f58',
+  centerText: '#e6edf3',
   centerTextShadow: 'none',
 } as const;
 
@@ -169,9 +169,12 @@ export function drawSlices(dc: DrawContext, items: string[], currentRotation: nu
     ctx.closePath();
     ctx.fillStyle = colors[index % colors.length];
     ctx.fill();
-    ctx.strokeStyle = c.sliceSeparator;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    // 仅在多于 1 个 item 时绘制分隔线
+    if (items.length > 1) {
+      ctx.strokeStyle = c.sliceSeparator;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
 
     // 扇形文字
     const midAngle = startAngle + sliceAngle / 2;
@@ -197,11 +200,14 @@ export function drawSlices(dc: DrawContext, items: string[], currentRotation: nu
 
 /** 绘制中心圆 */
 export function drawCenter(dc: DrawContext, isDark: boolean) {
-  const { ctx, centerX, centerY } = dc;
+  const { ctx, centerX, centerY, radius } = dc;
   const c = getDrawColors(isDark);
+  const centerRadius = radius * DRAW.CENTER_RADIUS_RATIO;
 
+  ctx.save();
+  ctx.shadowColor = 'transparent';
   ctx.beginPath();
-  ctx.arc(centerX, centerY, DRAW.CENTER_RADIUS, 0, Math.PI * 2);
+  ctx.arc(centerX, centerY, centerRadius, 0, Math.PI * 2);
   ctx.fillStyle = c.centerFill;
   ctx.fill();
   ctx.strokeStyle = c.centerBorder;
@@ -213,4 +219,5 @@ export function drawCenter(dc: DrawContext, isDark: boolean) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(DRAW.CENTER_TEXT, centerX, centerY);
+  ctx.restore();
 }
