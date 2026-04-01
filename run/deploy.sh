@@ -42,8 +42,12 @@ cmd_build() {
     docker pull node:20-alpine && docker pull nginx:alpine || {
         warn "基础镜像拉取失败，尝试直接构建..."
     }
-    # 使用 desktop-linux 构建器（docker driver，使用宿主机网络）
-    docker buildx build --builder desktop-linux --load \
+    # 自动检测可用的构建器，兼容 macOS Docker Desktop 和 Linux 环境
+    BUILDER=""
+    if docker buildx inspect desktop-linux >/dev/null 2>&1; then
+        BUILDER="--builder desktop-linux"
+    fi
+    docker buildx build ${BUILDER} --load \
         -t "${IMAGE_NAME}:${IMAGE_TAG}" \
         "${PROJECT_DIR}"
     local rc=$?
