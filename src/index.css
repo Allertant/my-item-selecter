@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+/* 禁止移动端长按选中文字 */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* 允许输入框内选中文字 */
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* ===== 白天模式（默认） ===== */
 @theme {
   --color-header: #f6f8fa;
