@@ -1,6 +1,17 @@
 @import "tailwindcss";
 
-/* 禁止移动端长按选中文字 */
+/* 方案 C：CSS 加载前 html 背景色，避免白闪 */
+html {
+  background-color: #f6f8fa;
+}
+html.dark {
+  background-color: #0d1117;
+}
+
+/* 方案 B：canvas 块级显示，避免底部空隙 */
+canvas {
+  display: block;
+}
 body {
   -webkit-user-select: none;
   user-select: none;

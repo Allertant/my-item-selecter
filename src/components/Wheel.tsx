@@ -61,6 +61,7 @@ export default function Wheel({ items, isSpinning, currentRotation, isDark, onEm
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [showTooltip, setShowTooltip] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -93,6 +94,11 @@ export default function Wheel({ items, isSpinning, currentRotation, isDark, onEm
 
   useEffect(() => {
     const handleResize = () => {
+      // 方案 A：跳过首次 resize 触发，避免 canvas 被重绘两次导致抖动
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
       const container = containerRef.current;
       if (!container) return;
       const w = container.clientWidth;
