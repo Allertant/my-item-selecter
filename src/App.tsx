@@ -40,6 +40,18 @@ function App() {
       <main className="flex-1 flex flex-col items-center justify-center overflow-hidden px-4 py-4 md:px-6 lg:py-10 xl:py-14">
         <div className="mx-auto max-w-5xl flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
           <div className="flex flex-col items-center lg:flex-shrink-0">
+            {/* 结果内联展示 - 预留固定高度避免布局移位 */}
+            <div className="h-10 lg:h-12 flex items-center justify-center">
+              {resultItem && (
+                <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
+                  <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
+                  <span className="text-sm text-fg">
+                    选中了
+                    <span className="font-semibold mx-1">{resultItem}</span>
+                  </span>
+                </div>
+              )}
+            </div>
             <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={handleEmptyClick} />
             <div className="flex items-center gap-3 mt-4 lg:mt-6">
               <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg">
@@ -55,18 +67,6 @@ function App() {
               >
                 <ListChecks className="h-5 w-5" />
               </Button>
-            </div>
-            {/* 结果内联展示 - 预留固定高度避免布局移位 */}
-            <div className="mt-5 lg:mt-3 h-7 lg:h-9 flex items-center justify-center">
-              {resultItem && (
-                <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
-                  <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
-                  <span className="text-sm text-fg">
-                    选中了
-                    <span className="font-semibold mx-1">{resultItem}</span>
-                  </span>
-                </div>
-              )}
             </div>
           </div>
           {/* PC 端：右侧面板 */}
