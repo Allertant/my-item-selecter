@@ -1,15 +1,16 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Wheel from '@/components/Wheel';
 import ItemList from '@/components/ItemList';
+import ItemManageModal from '@/components/ItemManageModal';
 import ConfigModal from '@/components/ConfigModal';
 import HistoryModal from '@/components/HistoryModal';
 import { useAppLogic } from '@/hooks/useAppLogic';
 import { useTheme } from '@/hooks/useTheme';
-import { PartyPopper } from 'lucide-react';
+import { PartyPopper, ListChecks } from 'lucide-react';
 
 function App() {
   const {
@@ -21,14 +22,11 @@ function App() {
   } = useAppLogic();
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
-  const [expandRequest, setExpandRequest] = useState(0);
-  const mobileInputRef = useRef<HTMLInputElement>(null);
+  const [mobileManageOpen, setMobileManageOpen] = useState(false);
 
-  // 同步 focus + 展开，确保 iOS Safari 弹出键盘
+  // 同步 focus + 展开并打开管理页（移动端点击空白转盘时）
   const handleEmptyClick = useCallback(() => {
-    setExpandRequest(v => v + 1);
-    // 折叠状态下 input DOM 仍存在，同步 focus 可触发 iOS 键盘
-    mobileInputRef.current?.focus();
+    setMobileManageOpen(true);
   }, []);
 
   return (
@@ -39,53 +37,60 @@ function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
       />
-      <main className="flex-1 flex flex-col overflow-hidden px-4 py-4 md:px-6 lg:py-10 xl:py-14">
-        <div className="mx-auto max-w-5xl flex flex-col flex-1 min-h-0 lg:min-h-0">
-          {/* 移动端：转盘+结果在上，列表在下（列表在剩余空间内滚动）。PC 端：左右双栏 */}
-          <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center lg:flex-1 lg:min-h-0">
-            <div className="flex flex-col items-center lg:flex-shrink-0 shrink-0">
-              <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={handleEmptyClick} />
-              <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg" className="mt-4 lg:mt-6">
+      <main className="flex-1 flex flex-col items-center justify-center overflow-hidden px-4 py-4 md:px-6 lg:py-10 xl:py-14">
+        <div className="mx-auto max-w-5xl flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
+          <div className="flex flex-col items-center lg:flex-shrink-0">
+            <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={handleEmptyClick} />
+            <div className="flex items-center gap-3 mt-4 lg:mt-6">
+              <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg">
                 开始旋转
               </Button>
-              {/* 结果内联展示 - 预留固定高度避免布局移位 */}
-              <div className="mt-2 lg:mt-3 h-7 lg:h-9 flex items-center justify-center">
-                {resultItem && (
-                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
-                    <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
-                    <span className="text-sm text-fg">
-                      选中了
-                      <span className="font-semibold mx-1">{resultItem}</span>
-                    </span>
-                  </div>
-                )}
-              </div>
+              {/* 移动端：管理项目入口 */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setMobileManageOpen(true)}
+                aria-label="管理项目"
+              >
+                <ListChecks className="h-5 w-5" />
+              </Button>
             </div>
-            {/* PC 端：右侧面板 */}
-            <div className="hidden lg:block w-full max-w-md lg:flex-1 xl:max-w-md">
-              <ItemList
-                items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
-                onClear={handleClearItems} disabled={isSpinning}
-                remaining={remaining} limitEnabled={limitEnabled}
-                expandRequest={expandRequest}
-              />
+            {/* 结果内联展示 - 预留固定高度避免布局移位 */}
+            <div className="mt-2 lg:mt-3 h-7 lg:h-9 flex items-center justify-center">
+              {resultItem && (
+                <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
+                  <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
+                  <span className="text-sm text-fg">
+                    选中了
+                    <span className="font-semibold mx-1">{resultItem}</span>
+                  </span>
+                </div>
+              )}
             </div>
           </div>
-          {/* 移动端：列表在剩余空间内滚动 */}
-          <div className="mt-4 lg:mt-8 w-full max-w-md mx-auto flex-1 min-h-0 overflow-hidden lg:hidden">
-            <div className="h-full overflow-y-auto">
-              <ItemList
-                items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
-                onClear={handleClearItems} disabled={isSpinning}
-                remaining={remaining} limitEnabled={limitEnabled}
-                expandRequest={expandRequest}
-                inputRef={mobileInputRef}
-              />
-            </div>
+          {/* PC 端：右侧面板 */}
+          <div className="hidden lg:block w-full max-w-md lg:flex-1 xl:max-w-md">
+            <ItemList
+              items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
+              onClear={handleClearItems} disabled={isSpinning}
+              remaining={remaining} limitEnabled={limitEnabled}
+            />
           </div>
         </div>
       </main>
       <Footer />
+      <ItemManageModal
+        open={mobileManageOpen}
+        onOpenChange={setMobileManageOpen}
+        items={items}
+        onAdd={handleAddItem}
+        onDelete={handleDeleteItem}
+        onClear={handleClearItems}
+        disabled={isSpinning}
+        remaining={remaining}
+        limitEnabled={limitEnabled}
+      />
       <ConfigModal open={configOpen} onOpenChange={setConfigOpen} settings={limitSettings} onSave={handleSaveConfig} usedCount={limitSettings.usedCount} remaining={remaining} />
       <HistoryModal open={historyOpen} onOpenChange={setHistoryOpen} history={history} onClear={handleClearHistory} />
     </TooltipProvider>
