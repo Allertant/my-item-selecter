@@ -67,7 +67,7 @@ export default function ItemList({
   };
 
   return (
-    <div className="flex flex-col gap-3 h-full">
+    <div className="flex flex-col gap-3">
       {/* 标题栏（可点击折叠） */}
       <button
         type="button"
