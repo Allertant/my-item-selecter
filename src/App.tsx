@@ -57,7 +57,7 @@ function App() {
               </Button>
             </div>
             {/* 结果内联展示 - 预留固定高度避免布局移位 */}
-            <div className="mt-2 lg:mt-3 h-7 lg:h-9 flex items-center justify-center">
+            <div className="mt-5 lg:mt-3 h-7 lg:h-9 flex items-center justify-center">
               {resultItem && (
                 <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
                   <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
