@@ -97,6 +97,14 @@ export default function ItemList({
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onBlur={() => {
+                  // iOS Safari 键盘收起后不会自动还原 scrollTop，导致页面偏移 Header 不可见
+                  // 用 setTimeout 等待键盘收起动画完成后再归零
+                  setTimeout(() => {
+                    document.documentElement.scrollTop = 0;
+                    document.body.scrollTop = 0;
+                  }, 100);
+                }}
                 placeholder="输入项目内容"
                 maxLength={20}
                 disabled={disabled}
@@ -117,7 +125,7 @@ export default function ItemList({
             )}
 
             {/* 项目列表 */}
-            <div className="border border-border rounded-md bg-canvas overflow-y-auto flex-1 min-h-[140px]">
+            <div className="border border-border rounded-md bg-canvas">
               {items.length === 0 ? (
                 <p className="p-6 text-sm text-fg-subtle text-center">暂无项目，请添加</p>
               ) : (

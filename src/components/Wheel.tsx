@@ -134,7 +134,7 @@ export default function Wheel({ items, isSpinning, currentRotation, isDark, onEm
     <>
       <div
         ref={containerRef}
-        className="relative w-[340px] sm:w-[380px] lg:w-[460px] max-w-full aspect-square flex items-center justify-center"
+        className="relative w-full h-[45vh] max-h-[340px] sm:max-h-[380px] lg:max-h-[460px] aspect-square flex items-center justify-center"
       >
         <div className="absolute top-1 left-1/2 -translate-x-1/2 z-10">
           <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[16px] border-l-transparent border-r-transparent border-t-fg drop-shadow-sm" />

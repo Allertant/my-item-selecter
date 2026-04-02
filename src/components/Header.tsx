@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export default function Header({ onOpenConfig, onOpenHistory, theme, onToggleTheme }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 bg-header text-fg border-b border-header-border px-4 py-2.5 sm:px-6 lg:px-10 flex items-center justify-between">
+    <header className="z-40 bg-header text-fg border-b border-header-border px-4 py-2.5 sm:px-6 lg:px-10 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Target className="h-[18px] w-[18px] lg:h-5 lg:w-5" />
         <h1 className="text-sm lg:text-base font-semibold tracking-wide">幸运转盘</h1>

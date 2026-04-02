@@ -19,10 +19,12 @@
           document.body.style.backgroundColor = '#f6f8fa';
         }
       })();
+      // 禁用浏览器滚动恢复，避免刷新时恢复不存在的页面滚动位置干扰布局
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root" class="h-dvh flex flex-col overflow-hidden"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

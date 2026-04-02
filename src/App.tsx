@@ -39,17 +39,17 @@ function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
       />
-      <main className="flex-1 px-4 py-6 md:px-6 lg:py-10 xl:py-14">
-        <div className="mx-auto max-w-5xl">
-          {/* 移动端：转盘+结果在上，列表在下。PC 端：左右双栏 */}
-          <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
-            <div className="flex flex-col items-center lg:flex-shrink-0">
+      <main className="flex-1 flex flex-col overflow-hidden px-4 py-4 md:px-6 lg:py-10 xl:py-14">
+        <div className="mx-auto max-w-5xl flex flex-col flex-1 min-h-0 lg:min-h-0">
+          {/* 移动端：转盘+结果在上，列表在下（列表在剩余空间内滚动）。PC 端：左右双栏 */}
+          <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center lg:flex-1 lg:min-h-0">
+            <div className="flex flex-col items-center lg:flex-shrink-0 shrink-0">
               <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={handleEmptyClick} />
-              <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg" className="mt-6">
+              <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg" className="mt-4 lg:mt-6">
                 开始旋转
               </Button>
               {/* 结果内联展示 - 预留固定高度避免布局移位 */}
-              <div className="mt-3 h-9 flex items-center justify-center">
+              <div className="mt-2 lg:mt-3 h-7 lg:h-9 flex items-center justify-center">
                 {resultItem && (
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
                     <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
@@ -71,15 +71,17 @@ function App() {
               />
             </div>
           </div>
-          {/* 移动端：列表放在最下方 */}
-          <div className="mt-8 w-full max-w-md mx-auto lg:hidden">
-            <ItemList
-              items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
-              onClear={handleClearItems} disabled={isSpinning}
-              remaining={remaining} limitEnabled={limitEnabled}
-              expandRequest={expandRequest}
-              inputRef={mobileInputRef}
-            />
+          {/* 移动端：列表在剩余空间内滚动 */}
+          <div className="mt-4 lg:mt-8 w-full max-w-md mx-auto flex-1 min-h-0 overflow-hidden lg:hidden">
+            <div className="h-full overflow-y-auto">
+              <ItemList
+                items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
+                onClear={handleClearItems} disabled={isSpinning}
+                remaining={remaining} limitEnabled={limitEnabled}
+                expandRequest={expandRequest}
+                inputRef={mobileInputRef}
+              />
+            </div>
           </div>
         </div>
       </main>
