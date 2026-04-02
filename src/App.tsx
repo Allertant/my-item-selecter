@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
@@ -22,6 +22,14 @@ function App() {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
   const [expandRequest, setExpandRequest] = useState(0);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
+
+  // 同步 focus + 展开，确保 iOS Safari 弹出键盘
+  const handleEmptyClick = useCallback(() => {
+    setExpandRequest(v => v + 1);
+    // 折叠状态下 input DOM 仍存在，同步 focus 可触发 iOS 键盘
+    mobileInputRef.current?.focus();
+  }, []);
 
   return (
     <TooltipProvider>
@@ -36,7 +44,7 @@ function App() {
           {/* 移动端：转盘+结果在上，列表在下。PC 端：左右双栏 */}
           <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
             <div className="flex flex-col items-center lg:flex-shrink-0">
-              <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={() => setExpandRequest(v => v + 1)} />
+              <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={handleEmptyClick} />
               <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg" className="mt-6">
                 开始旋转
               </Button>
@@ -70,6 +78,7 @@ function App() {
               onClear={handleClearItems} disabled={isSpinning}
               remaining={remaining} limitEnabled={limitEnabled}
               expandRequest={expandRequest}
+              inputRef={mobileInputRef}
             />
           </div>
         </div>
