@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
@@ -20,6 +21,7 @@ function App() {
   } = useAppLogic();
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
+  const [expandRequest, setExpandRequest] = useState(0);
 
   return (
     <TooltipProvider>
@@ -34,7 +36,7 @@ function App() {
           {/* 移动端：转盘+结果在上，列表在下。PC 端：左右双栏 */}
           <div className="flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center">
             <div className="flex flex-col items-center lg:flex-shrink-0">
-              <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} />
+              <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={() => setExpandRequest(v => v + 1)} />
               <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg" className="mt-6">
                 开始旋转
               </Button>
@@ -57,6 +59,7 @@ function App() {
                 items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
                 onClear={handleClearItems} disabled={isSpinning}
                 remaining={remaining} limitEnabled={limitEnabled}
+                expandRequest={expandRequest}
               />
             </div>
           </div>
@@ -66,6 +69,7 @@ function App() {
               items={items} onAdd={handleAddItem} onDelete={handleDeleteItem}
               onClear={handleClearItems} disabled={isSpinning}
               remaining={remaining} limitEnabled={limitEnabled}
+              expandRequest={expandRequest}
             />
           </div>
         </div>

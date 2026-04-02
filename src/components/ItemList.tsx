@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -12,6 +12,8 @@ interface ItemListProps {
   disabled: boolean;
   remaining: number;
   limitEnabled: boolean;
+  /** 外部触发展开（每次值变化时展开并聚焦输入框） */
+  expandRequest?: number;
 }
 
 export default function ItemList({
@@ -22,9 +24,22 @@ export default function ItemList({
   disabled,
   remaining,
   limitEnabled,
+  expandRequest,
 }: ItemListProps) {
   const [inputValue, setInputValue] = useState('');
   const [collapsed, setCollapsed] = useLocalStorage('wheel-collapsed', true);
+  const inputElRef = useRef<HTMLInputElement>(null);
+  const lastExpandRequest = useRef(expandRequest);
+
+  // 外部请求展开时，展开列表并聚焦输入框（只在值变化时触发，跳过初始挂载）
+  useEffect(() => {
+    if (expandRequest !== undefined && expandRequest !== lastExpandRequest.current) {
+      lastExpandRequest.current = expandRequest;
+      setCollapsed(false);
+      // 等折叠动画完成后聚焦
+      setTimeout(() => inputElRef.current?.focus(), 250);
+    }
+  }, [expandRequest, setCollapsed]);
 
   const handleAdd = () => {
     const text = inputValue.trim();
@@ -76,6 +91,7 @@ export default function ItemList({
                 maxLength={20}
                 disabled={disabled}
                 className="flex-1"
+                ref={inputElRef}
               />
               <Button onClick={handleAdd} disabled={disabled || items.length >= 16} size="sm">
                 <Plus className="h-4 w-4" />

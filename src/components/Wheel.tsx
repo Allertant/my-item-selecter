@@ -7,6 +7,7 @@ interface WheelProps {
   isSpinning: boolean;
   currentRotation: number;
   isDark: boolean;
+  onEmptyClick?: () => void;
 }
 
 /** 转盘尺寸相关常量 */
@@ -53,7 +54,7 @@ function getHoveredSliceIndex(
   return index >= 0 && index < itemCount ? index : null;
 }
 
-export default function Wheel({ items, isSpinning, currentRotation, isDark }: WheelProps) {
+export default function Wheel({ items, isSpinning, currentRotation, isDark, onEmptyClick }: WheelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tooltipText, setTooltipText] = useState('');
@@ -135,6 +136,7 @@ export default function Wheel({ items, isSpinning, currentRotation, isDark }: Wh
         <canvas
           ref={canvasRef}
           className="cursor-pointer"
+          onClick={() => { if (items.length === 0) onEmptyClick?.(); }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         />
