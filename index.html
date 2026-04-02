@@ -24,7 +24,7 @@
       // 动态计算真实可视区高度，兼容 iOS Safari 工具栏/键盘影响
       function setAppHeight() {
         var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-        document.documentEflex flex-col overflow-hidden" style="height: var(--app-height, 100vh)ght', h + 'px');
+        document.documentElement.style.setProperty('--app-height', h + 'px');
       }
       setAppHeight();
       if (window.visualViewport) {
@@ -34,7 +34,7 @@
     </script>
   </head>
   <body>
-    <div id="root" class="h-dvh flex flex-col overflow-hidden"></div>
+    <div id="root" class="flex flex-col overflow-hidden" style="height: var(--app-height, 100vh)"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
