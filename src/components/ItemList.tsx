@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -14,6 +14,8 @@ interface ItemListProps {
   limitEnabled: boolean;
   /** 外部触发展开（每次值变化时展开并聚焦输入框） */
   expandRequest?: number;
+  /** 外部传入的 input ref，用于同步 focus 触发 iOS 键盘 */
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 export default function ItemList({
@@ -25,19 +27,27 @@ export default function ItemList({
   remaining,
   limitEnabled,
   expandRequest,
+  inputRef,
 }: ItemListProps) {
   const [inputValue, setInputValue] = useState('');
   const [collapsed, setCollapsed] = useLocalStorage('wheel-collapsed', true);
-  const inputElRef = useRef<HTMLInputElement>(null);
+  const internalInputRef = useRef<HTMLInputElement>(null);
   const lastExpandRequest = useRef(expandRequest);
+
+  // 同步外部 ref 到内部 ref
+  useEffect(() => {
+    if (inputRef && 'current' in inputRef) {
+      (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = internalInputRef.current;
+    }
+  }, [inputRef]);
 
   // 外部请求展开时，展开列表并聚焦输入框（只在值变化时触发，跳过初始挂载）
   useEffect(() => {
     if (expandRequest !== undefined && expandRequest !== lastExpandRequest.current) {
       lastExpandRequest.current = expandRequest;
       setCollapsed(false);
-      // 等折叠动画完成后聚焦
-      setTimeout(() => inputElRef.current?.focus(), 250);
+      // 等折叠动画完成后聚焦（非移动端场景的 fallback）
+      setTimeout(() => internalInputRef.current?.focus(), 250);
     }
   }, [expandRequest, setCollapsed]);
 
@@ -57,7 +67,7 @@ export default function ItemList({
   };
 
   return (
-    <div className="flex flex-col gap-3 h-full">
+    <div className="flex flex-col gap-3">
       {/* 标题栏（可点击折叠） */}
       <button
         type="button"
@@ -87,11 +97,19 @@ export default function ItemList({
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onBlur={() => {
+                  // iOS Safari 键盘收起后不会自动还原 scrollTop，导致页面偏移 Header 不可见
+                  // 用 setTimeout 等待键盘收起动画完成后再归零
+                  setTimeout(() => {
+                    document.documentElement.scrollTop = 0;
+                    document.body.scrollTop = 0;
+                  }, 100);
+                }}
                 placeholder="输入项目内容"
                 maxLength={20}
                 disabled={disabled}
                 className="flex-1"
-                ref={inputElRef}
+                ref={internalInputRef}
               />
               <Button onClick={handleAdd} disabled={disabled || items.length >= 16} size="sm">
                 <Plus className="h-4 w-4" />
@@ -107,7 +125,7 @@ export default function ItemList({
             )}
 
             {/* 项目列表 */}
-            <div className="border border-border rounded-md bg-canvas overflow-y-auto flex-1 min-h-[140px]">
+            <div className="border border-border rounded-md bg-canvas">
               {items.length === 0 ? (
                 <p className="p-6 text-sm text-fg-subtle text-center">暂无项目，请添加</p>
               ) : (

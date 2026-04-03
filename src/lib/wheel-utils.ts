@@ -1,11 +1,21 @@
-/** GitHub 风格双色交替配色（白天模式） */
+/** 亮色模式：鲜亮柔和的多彩配色 */
 export const WHEEL_COLORS_LIGHT = [
-  '#656d76', '#c9d1d9',
+  '#4A90D9', // 钢蓝
+  '#F5A623', // 琥珀橙
+  '#7ED321', // 草绿
+  '#D0021B', // 正红
+  '#9013FE', // 紫罗兰
+  '#50E3C2', // 薄荷绿
 ] as const;
 
-/** GitHub 风格双色交替配色（夜晚模式） */
+/** 暗色模式：偏暗灰的低饱和配色 */
 export const WHEEL_COLORS_DARK = [
-  '#30363d', '#21262d',
+  '#4B5563', // 暗灰
+  '#6B7280', // 中灰
+  '#374151', // 深灰
+  '#52525B', // 灰锌
+  '#3F4A5C', // 蓝灰
+  '#4A4E54', // 铁灰
 ] as const;
 
 /** 根据主题获取配色 */
@@ -27,7 +37,7 @@ export function calculateTargetRotation(
   resultIndex: number,
   itemCount: number,
 ): number {
-  const minSpins = 5;
+  const minSpins = 8;
   const sliceAngle = (Math.PI * 2) / itemCount;
   const pointerAngle = (3 * Math.PI) / 2;
   const targetSliceStart = pointerAngle - sliceAngle / 2;

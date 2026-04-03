@@ -7,7 +7,11 @@ import type { HistoryItem, LimitSettings } from '@/types';
 /** 历史记录最大条数 */
 const MAX_HISTORY = 100;
 
-export function useAppLogic() {
+interface UseAppLogicOptions {
+  onFrame?: (rotation: number) => void;
+}
+
+export function useAppLogic({ onFrame }: UseAppLogicOptions = {}) {
   // === 数据 ===
   const [items, setItems] = useLocalStorage<string[]>('wheelItems', []);
   const [history, setHistory] = useLocalStorage<HistoryItem[]>('wheelHistory', []);
@@ -57,6 +61,7 @@ export function useAppLogic() {
   // === 转盘旋转 ===
   const { startSpin, isSpinning, currentRotation } = useWheelSpin({
     items,
+    onFrame,
     onSpinEnd: handleSpinEnd,
   });
 
