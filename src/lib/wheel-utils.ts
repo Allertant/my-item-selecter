@@ -37,7 +37,7 @@ export function calculateTargetRotation(
   resultIndex: number,
   itemCount: number,
 ): number {
-  const minSpins = 5;
+  const minSpins = 8;
   const sliceAngle = (Math.PI * 2) / itemCount;
   const pointerAngle = (3 * Math.PI) / 2;
   const targetSliceStart = pointerAngle - sliceAngle / 2;

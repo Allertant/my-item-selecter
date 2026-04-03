@@ -24,7 +24,7 @@ export function useWheelSpin({ items, onFrame, onSpinEnd }: UseWheelSpinOptions)
     const targetRotation = calculateTargetRotation(currentRotation, resultIndex, items.length);
     const startRotation = currentRotation;
     const totalRotation = targetRotation - startRotation;
-    const duration = 4000;
+    const duration = 3500;
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
