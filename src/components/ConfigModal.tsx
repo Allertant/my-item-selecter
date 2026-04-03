@@ -90,7 +90,7 @@ export default function ConfigModal({
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="gap-3 sm:gap-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>取消</Button>
           <Button onClick={handleSave}>确定</Button>
         </DialogFooter>
