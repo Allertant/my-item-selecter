@@ -41,7 +41,7 @@ function App() {
         <div className="mx-auto max-w-5xl flex flex-col items-center lg:flex-row lg:items-start lg:gap-10 xl:gap-14 lg:justify-center -translate-y-6 lg:translate-y-0">
           <div className="flex flex-col items-center lg:flex-shrink-0">
             {/* 结果内联展示 - 预留固定高度避免布局移位 */}
-            <div className="h-8 lg:h-16 mb-3 lg:mb-8 flex items-center justify-center">
+            <div className="h-8 lg:h-16 mb-10 lg:mb-8 flex items-center justify-center">
               {resultItem && (
                 <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-canvas border border-border">
                   <PartyPopper className="h-4 w-4 text-fg-muted shrink-0" />
