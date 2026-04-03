@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { createDrawContext, clearCanvas, drawEmptyWheel, drawSlices, drawCenter } from '@/lib/wheel-drawing';
 import { WheelTooltip } from '@/components/WheelTooltip';
 
@@ -8,6 +8,11 @@ interface WheelProps {
   currentRotation: number;
   isDark: boolean;
   onEmptyClick?: () => void;
+}
+
+/** 暴露给父组件的方法 */
+export interface WheelHandle {
+  drawWithRotation: (rotation: number) => void;
 }
 
 /** 转盘尺寸相关常量 */
@@ -54,7 +59,39 @@ function getHoveredSliceIndex(
   return index >= 0 && index < itemCount ? index : null;
 }
 
-export default function Wheel({ items, isSpinning, currentRotation, isDark, onEmptyClick }: WheelProps) {
+/** 绘制转盘的核心逻辑，可独立于 React state 调用 */
+function drawWheel(
+  canvas: HTMLCanvasElement,
+  container: HTMLDivElement,
+  items: string[],
+  rotation: number,
+  isDark: boolean,
+) {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  const isDesktop = container.clientWidth >= WHEEL.SIZE_MOBILE;
+  const size = getWheelSize(container.clientWidth, isDesktop);
+
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = `${size}px`;
+  canvas.style.height = `${size}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const dc = createDrawContext(ctx, size);
+  clearCanvas(dc);
+
+  if (items.length === 0) {
+    drawEmptyWheel(dc, isDark);
+  } else {
+    drawSlices(dc, items, rotation, isDark);
+    drawCenter(dc, isDark);
+  }
+}
+
+const Wheel = forwardRef<WheelHandle, WheelProps>(function Wheel({ items, isSpinning, currentRotation, isDark, onEmptyClick }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tooltipText, setTooltipText] = useState('');
@@ -63,34 +100,30 @@ export default function Wheel({ items, isSpinning, currentRotation, isDark, onEm
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const isFirstRender = useRef(true);
 
+  // 存储最新的 items 和 isDark，供 drawWithRotation 使用
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
+  const isDarkRef = useRef(isDark);
+  isDarkRef.current = isDark;
+
+  // 暴露给父组件的绘制方法，动画期间直接调用，绕过 React state
+  useImperativeHandle(ref, () => ({
+    drawWithRotation: (rotation: number) => {
+      const canvas = canvasRef.current;
+      const container = containerRef.current;
+      if (!canvas || !container) return;
+      drawWheel(canvas, container, itemsRef.current, rotation, isDarkRef.current);
+    },
+  }), []);
+
+  // 非动画时的绘制（items/dimensions/isDark 变化时）
   useEffect(() => {
+    if (isSpinning) return; // 动画期间由 onFrame 接管绘制
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const isDesktop = container.clientWidth >= WHEEL.SIZE_MOBILE;
-    const size = getWheelSize(container.clientWidth, isDesktop);
-
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
-    canvas.style.width = `${size}px`;
-    canvas.style.height = `${size}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const dc = createDrawContext(ctx, size);
-    clearCanvas(dc);
-
-    if (items.length === 0) {
-      drawEmptyWheel(dc, isDark);
-    } else {
-      drawSlices(dc, items, currentRotation, isDark);
-      drawCenter(dc, isDark);
-    }
-  }, [items, currentRotation, dimensions, isDark]);
+    drawWheel(canvas, container, items, currentRotation, isDark);
+  }, [items, currentRotation, dimensions, isDark, isSpinning]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -150,4 +183,6 @@ export default function Wheel({ items, isSpinning, currentRotation, isDark, onEm
       <WheelTooltip text={tooltipText} position={tooltipPos} visible={showTooltip} />
     </>
   );
-}
+});
+
+export default Wheel;

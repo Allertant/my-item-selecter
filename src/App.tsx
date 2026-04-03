@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Wheel from '@/components/Wheel';
+import type { WheelHandle } from '@/components/Wheel';
 import ItemList from '@/components/ItemList';
 import ItemManageModal from '@/components/ItemManageModal';
 import ConfigModal from '@/components/ConfigModal';
@@ -13,13 +14,18 @@ import { useTheme } from '@/hooks/useTheme';
 import { PartyPopper, ListChecks } from 'lucide-react';
 
 function App() {
+  const wheelRef = useRef<WheelHandle>(null);
   const {
     items, history, remaining, isSpinning, currentRotation, startSpin,
     configOpen, setConfigOpen, historyOpen, setHistoryOpen,
     resultItem,
     handleAddItem, handleDeleteItem, handleClearItems,
     handleClearHistory, handleSaveConfig, limitSettings, limitEnabled,
-  } = useAppLogic();
+  } = useAppLogic({
+    onFrame: useCallback((rotation: number) => {
+      wheelRef.current?.drawWithRotation(rotation);
+    }, []),
+  });
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
   const [mobileManageOpen, setMobileManageOpen] = useState(false);
@@ -52,7 +58,7 @@ function App() {
                 </div>
               )}
             </div>
-            <Wheel items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={handleEmptyClick} />
+            <Wheel ref={wheelRef} items={items} isSpinning={isSpinning} currentRotation={currentRotation} isDark={isDark} onEmptyClick={handleEmptyClick} />
             <div className="flex items-center gap-3 mt-4 lg:mt-6">
               <Button onClick={startSpin} disabled={isSpinning || items.length === 0} size="lg">
                 开始旋转
