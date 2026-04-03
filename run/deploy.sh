@@ -10,8 +10,9 @@ set -e
 
 # ---------- 配置 ----------
 IMAGE_NAME="my-lucky-wheel"
-IMAGE_TAG="latest"
+IMAGE_TAG="v1.0"
 CONTAINER_NAME="lucky-wheel"
+DEPLOY_VERSION="v1.0"
 PORT="${DEPLOY_PORT:-8080}"
 
 # ---------- 路径 ----------
@@ -36,7 +37,11 @@ error() { echo -e "${RED}[ERROR]${NC} $*"; }
 
 # ---------- 命令 ----------
 cmd_build() {
-    info "开始构建镜像..."
+    info "切换到 ${DEPLOY_VERSION} 版本代码..."
+    cd "${PROJECT_DIR}"
+    git fetch origin tag "${DEPLOY_VERSION}" 2>/dev/null || true
+    git checkout "${DEPLOY_VERSION}" --quiet
+    info "开始构建镜像 (${DEPLOY_VERSION})..."
     # 预拉取基础镜像，避免 BuildKit DNS 解析失败
     info "预拉取基础镜像 node:20-alpine nginx:alpine ..."
     docker pull node:20-alpine && docker pull nginx:alpine || {
